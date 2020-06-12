@@ -1,35 +1,32 @@
 namespace SpriteKind {
     export const gun = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    monster.destroy(effects.disintegrate, 5000)
+    info.changeScoreBy(1)
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    gun = sprites.createProjectileFromSprite(img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-5 . . . . . . . . . . . . . . . 
-. 5 . . . . . . . . . . . . . . 
-. . 5 . . . . . . . . . . . . . 
-. . . f f f f f f f 2 2 . . . . 
-5 5 5 f f f f f f f 2 2 . . . . 
-5 5 5 f f f f f f f 2 2 . . . . 
-. . . f f f f f f f 2 2 . . . . 
-. . 5 . . . . . . . . . . . . . 
-. 5 . . . . . . . . . . . . . . 
-5 . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`, mySprite, 200, 0)
-})
-sprites.onOverlap(SpriteKind.gun, SpriteKind.Projectile, function (sprite, otherSprite) {
-    projectile.destroy()
-})
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Player, function (sprite, otherSprite) {
-    music.siren.play()
-    mySprite.startEffect(effects.trail, 500)
+    projectile = sprites.createProjectileFromSprite(img`
+. . . . . . . . . . b 5 b . . . 
+. . . . . . . . . b 5 b . . . . 
+. . . . . . b b b b b b . . . . 
+. . . . . b b 5 5 5 5 5 b . . . 
+. . . . b b 5 d 1 f 5 d 4 c . . 
+. . . . b 5 5 1 f f d d 4 4 4 b 
+. . . . b 5 5 d f b 4 4 4 4 b . 
+. . . b d 5 5 5 5 4 4 4 4 b . . 
+. b b d d d 5 5 5 5 5 5 5 b . . 
+b d d d b b b 5 5 5 5 5 5 5 b . 
+c d d b 5 5 d c 5 5 5 5 5 5 b . 
+c b b d 5 d c d 5 5 5 5 5 5 b . 
+c b 5 5 b c d d 5 5 5 5 5 5 b . 
+b b c c c d d d 5 5 5 5 5 d b . 
+. . . . c c d d d 5 5 5 b b . . 
+. . . . . . c c c c c b b . . . 
+`, mySprite, 500, 200)
 })
 let projectile: Sprite = null
-let gun: Sprite = null
+let monster: Sprite = null
 let mySprite: Sprite = null
 scene.setBackgroundColor(1)
 mySprite = sprites.create(img`
@@ -54,7 +51,7 @@ mySprite.setFlag(SpriteFlag.StayInScreen, true)
 info.startCountdown(100)
 controller.moveSprite(mySprite, 200, 200)
 game.onUpdateInterval(500, function () {
-    projectile = sprites.create(img`
+    monster = sprites.create(img`
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -80,6 +77,6 @@ game.onUpdateInterval(500, function () {
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 `, SpriteKind.Enemy)
-    projectile.setVelocity(Math.randomRange(-100, 50), Math.randomRange(-100, 50))
-    projectile.setPosition(100, Math.randomRange(0, 150))
+    monster.setVelocity(Math.randomRange(-40, 30), 0)
+    monster.setPosition(75, Math.randomRange(0, 100))
 })
