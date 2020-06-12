@@ -1,8 +1,35 @@
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    mySprite.startEffect(effects.fire, 200)
-    music.powerDown.playUntilDone()
+namespace SpriteKind {
+    export const gun = SpriteKind.create()
+}
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    gun = sprites.createProjectileFromSprite(img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+5 . . . . . . . . . . . . . . . 
+. 5 . . . . . . . . . . . . . . 
+. . 5 . . . . . . . . . . . . . 
+. . . f f f f f f f 2 2 . . . . 
+5 5 5 f f f f f f f 2 2 . . . . 
+5 5 5 f f f f f f f 2 2 . . . . 
+. . . f f f f f f f 2 2 . . . . 
+. . 5 . . . . . . . . . . . . . 
+. 5 . . . . . . . . . . . . . . 
+5 . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, mySprite, 200, 0)
+})
+sprites.onOverlap(SpriteKind.gun, SpriteKind.Projectile, function (sprite, otherSprite) {
+    projectile.destroy()
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Player, function (sprite, otherSprite) {
+    music.siren.play()
+    mySprite.startEffect(effects.trail, 500)
 })
 let projectile: Sprite = null
+let gun: Sprite = null
 let mySprite: Sprite = null
 scene.setBackgroundColor(1)
 mySprite = sprites.create(img`
@@ -24,10 +51,10 @@ e 4 f b 1 1 1 1 b f 4 e
 . . . f f . . f f . . . 
 `, SpriteKind.Player)
 mySprite.setFlag(SpriteFlag.StayInScreen, true)
-info.startCountdown(2000)
-controller.moveSprite(mySprite)
-game.onUpdateInterval(1000, function () {
-    projectile = sprites.createProjectileFromSide(img`
+info.startCountdown(100)
+controller.moveSprite(mySprite, 200, 200)
+game.onUpdateInterval(500, function () {
+    projectile = sprites.create(img`
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -52,5 +79,7 @@ game.onUpdateInterval(1000, function () {
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . 
-`, Math.randomRange(-50, 50), Math.randomRange(-50, 50))
+`, SpriteKind.Enemy)
+    projectile.setVelocity(Math.randomRange(-100, 50), Math.randomRange(-100, 50))
+    projectile.setPosition(100, Math.randomRange(0, 150))
 })
